@@ -24,3 +24,24 @@ class Hacker:
         self.trace_level = 0
         self.trace_threshold = 5
 
+    """Acquiring a rig using the already given CryptoToken
+    Checks to see if a rig already exists using a Boolean and if it doesn't exist
+    Will create one if the Hacker has a CryptoToken in their inventory"""
+    def acquire_rig(self, rig=None):
+        if self.rig:
+            print("Rig already acquired.")
+            return False
+        if rig is None:
+            self.rig = Rig(f"{self.name}'s Rig")
+        else:
+            self.rig = rig
+        #Consume one CryptoToken
+        token = self.scan_inventory_for_type(CryptoToken)  #scans for a CrytoToken to be used to acquire a rig
+        if token:
+            self.inventory.remove(token)
+            print(f"{self.name} acquired rig: {self.rig.name}")
+            return True
+        else:
+            print("No CryptoToken to activate rig")
+            return False
+
