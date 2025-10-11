@@ -17,17 +17,24 @@ This is my own work as defined by the University's Academic Misconduct Policy.
 class Hacker:
     """Represents a Hacker with an inventory, a rig and trace level with a level and threshold.
     Inventory will hold the Assets and contains one CryptoToken."""
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
-        self.inventory: List[Asset] = [CryptoToken()]
+        self.inventory = [CryptoToken()]
         self.rig = None
         self.trace_level = 0
         self.trace_threshold = 5
 
-    """Acquiring a rig using the already given CryptoToken
-    Checks to see if a rig already exists using a Boolean and if it doesn't exist
-    Will create one if the Hacker has a CryptoToken in their inventory"""
+    def scan_inventory_for(self, item_name: str):
+        """Scans the inventory for a certain item."""
+        for item in self.inventory:
+            if item.name == item_name:
+                return item
+            return None
+
     def acquire_rig(self, rig=None):
+        """Acquiring a rig using the already given CryptoToken
+        Checks to see if a rig already exists using a Boolean and if it doesn't exist
+        Will create one if the Hacker has a CryptoToken in their inventory"""
         if self.rig:
             print("Rig already acquired.")
             return False
@@ -45,10 +52,10 @@ class Hacker:
             print("No CryptoToken to activate rig")
             return False
 
-    """Launching Data Spikes on other rigs and consuming a Data Spike from their own rig storage
-    Checks to see if there is a rig to launch Data Spikes from
-    True if there is, False if there isn't"""
     def launch_data_spike(self, target_rig: Rig) -> bool:
+        """Launching Data Spikes on other rigs and consuming a Data Spike from their own rig storage
+          Checks to see if there is a rig to launch Data Spikes from
+          True if there is, False if there isn't"""
         if self.rig is None:
             print("No rig to launch spikes from.")
             return False
