@@ -36,7 +36,7 @@ class Hacker:
         else:
             self.rig = rig
         #Consume one CryptoToken
-        token = self.scan_inventory_for_type(CryptoToken)  #scans for a CrytoToken to be used to acquire a rig
+        token = self.scan_inventory_for_type(CryptoToken)  #scans for a CryptoToken to be used to acquire a rig
         if token:
             self.inventory.remove(token)
             print(f"{self.name} acquired rig: {self.rig.name}")
@@ -44,4 +44,23 @@ class Hacker:
         else:
             print("No CryptoToken to activate rig")
             return False
+
+    """Launching Data Spikes on other rigs and consuming a Data Spike from their own rig storage
+    Checks to see if there is a rig to launch Data Spikes from
+    True if there is, False if there isn't"""
+    def launch_data_spike(self, target_rig: Rig) -> bool:
+        if self.rig is None:
+            print("No rig to launch spikes from.")
+            return False
+        if self.trace_level > self.trace_threshold:
+            print("Trace level is too high to launch attack.")
+            return False
+        spike = self.rig.release_asset_by_name('DataSpike')
+        if spike is None:
+            print("No Data Spike is available.")
+            return False
+        target_rig.take_hit()
+        self.increase_trace(2)
+        return True
+
 
