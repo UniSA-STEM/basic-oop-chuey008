@@ -15,6 +15,7 @@ This is my own work as defined by the University's Academic Misconduct Policy.
 # This is my own work as defined by the University's Academic Misconduct Policy.
 
 class Asset:
+    """Represents a digital asset and checks to see if the asset is encrypted"""
     def __init__(self, name: str, description: str, encrypted: bool = False):
         self.name = name
         self.description = description
