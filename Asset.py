@@ -31,3 +31,23 @@ class Asset:
         s = f"{self.name}: {self.description}"
         return f"{s} [Encrypted:" if self.encrypted else s
 
+"""Using subclasses to inherit from the parent class of Asset and adds a description as to what it's used for as per the spec sheet"""
+class CryptoToken(Asset):
+    def __init__(self):
+        super().__init__("CryptoToken", "Used to acquire or repair rigs.")
+
+class DataSpike(Asset):
+    def __init__(self):
+        super().__init__("DataSpike", "Used in battles.")
+
+class RemovableDrive(Asset):
+    def __init__(self):
+        super().__init__("RemovableDrive","Found in rigs and used for extraction.")
+
+class SecurityChip(Asset):
+    def __init__(self):
+        super().__init__("SecurityChip", "Used to encrypt or decrypt assets.")
+
+class HardwarePatch(Asset):
+    def __init__(self):
+        super().__init__("HardwarePatch", "Used to upgrade rigs.")
