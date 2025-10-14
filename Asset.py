@@ -52,3 +52,4 @@ class SecurityChip(Asset):
 class HardwarePatch(Asset):
     def __init__(self):
         super().__init__("HardwarePatch", "Used to upgrade rigs.")
+

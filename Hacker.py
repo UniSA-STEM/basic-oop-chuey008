@@ -14,6 +14,11 @@ This is my own work as defined by the University's Academic Misconduct Policy.
 # Username: Chuey008
 # This is my own work as defined by the University's Academic Misconduct Policy.
 
+# Will need to remember to import asset from Assets file
+
+# From rig import Rig
+
+
 class Hacker:
     """Represents a Hacker with an inventory, a rig and trace level with a level and threshold.
     Inventory will hold the Assets and contains one CryptoToken."""
@@ -43,7 +48,7 @@ class Hacker:
         else:
             self.rig = rig
         #Consume one CryptoToken
-        token = self.scan_inventory_for_type(CryptoToken)  #scans for a CryptoToken to be used to acquire a rig
+        token = self.scan_inventory_for_type(CryptoToken)  # scans for a CryptoToken to be used to acquire a rig
         if token:
             self.inventory.remove(token)
             print(f"{self.name} acquired rig: {self.rig.name}")
@@ -57,9 +62,9 @@ class Hacker:
           Checks to see if there is a rig to launch Data Spikes from
           True if there is, False if there isn't"""
         if self.rig is None:
-            print("No rig to launch spikes from.")
+            print("No rig to launch spikes from.")  # checks to see if a rig exists
             return False
-        if self.trace_level > self.trace_threshold:
+        if self.trace_level > self.trace_threshold:  # trace level greater than trace threshold than no launch of data spike
             print("Trace level is too high to launch attack.")
             return False
         spike = self.rig.release_asset_by_name('DataSpike')
