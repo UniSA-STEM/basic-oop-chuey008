@@ -27,9 +27,10 @@ class Asset:
     def decrypt(self):
         self.encrypted = False
 
+# String conversion method format as described in the spec sheet
     def __str__(self):
         s = f"{self.name}: {self.description}"
-        return f"{s} [Encrypted:" if self.encrypted else s
+        return f"{s} [Encrypted]" if self.encrypted else s
 
 """Using subclasses to inherit from the parent class of Asset and adds a description as to what it's used for as per the spec sheet"""
 class CryptoToken(Asset):
