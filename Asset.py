@@ -16,11 +16,11 @@ This is my own work as defined by the University's Academic Misconduct Policy.
 
 class Asset:
     """Represents a digital asset and checks to see if the asset is encrypted"""
-    def __init__(self, name: str, description: str, encrypted: bool = False, meta: Dict = None) -> None:
+    def __init__(self, name: str, description: str, encrypted: bool = False, meta = None):
         self.name = name
         self.description = description
         self.encrypted = encrypted
-        self.meta = dict(meta) if meta else {}      # added another attribute to the asset
+        self.meta = meta or {}      # added another attribute to the asset
 
     def encrypt(self):
         self.encrypted = True
@@ -30,7 +30,7 @@ class Asset:
 
 # String conversion method format as described in the spec sheet
     def __str__(self):
-        format = f"{self.name}: {self.description}"
+        format = f"<{self.name}>:<{self.description}>"
         return f"{format} [Encrypted]" if self.encrypted else format
 
 class CryptoToken:
@@ -40,6 +40,19 @@ class CryptoToken:
         self.description = "A single-use token to acquire or repair rigs."
         self.encrypted = False
         self.meta = {"consumable": True}
+    def encrypt(self): self.encrypted = True
+    def decrypt(self): self.encrypted = False
+    def __str__(self):
+        return f"{format}[Encrypted]" if self.encrypted else format
 
+class DataSpike:
+    """DataSpike: used in battles"""
+    def __init__(self) -> None:
+        self.name = "DataSpike"
+        self.description = "Used to attack rigs"
+        self.encrypted = False
+        self.meta = {"consumable": True}
+    def __str__(self):
+        return f"{format}[Encrypted]" if self.encrypted else format
 
 
