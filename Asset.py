@@ -16,10 +16,11 @@ This is my own work as defined by the University's Academic Misconduct Policy.
 
 class Asset:
     """Represents a digital asset and checks to see if the asset is encrypted"""
-    def __init__(self, name: str, description: str, encrypted: bool = False):
+    def __init__(self, name: str, description: str, encrypted: bool = False, meta: Dict = None) -> None:
         self.name = name
         self.description = description
         self.encrypted = encrypted
+        self.meta = dict(meta) if meta else {}      # added another attribute to the asset
 
     def encrypt(self):
         self.encrypted = True
@@ -29,27 +30,16 @@ class Asset:
 
 # String conversion method format as described in the spec sheet
     def __str__(self):
-        s = f"{self.name}: {self.description}"
-        return f"{s} [Encrypted]" if self.encrypted else s
+        format = f"{self.name}: {self.description}"
+        return f"{format} [Encrypted]" if self.encrypted else format
 
-"""Using subclasses to inherit from the parent class of Asset and adds a description as to what it's used for as per the spec sheet"""
-class CryptoToken(Asset):
-    def __init__(self):
-        super().__init__("CryptoToken", "Used to acquire or repair rigs.")
+class CryptoToken:
+    """CryptoToken: used to acquire or repair rigs, this is to be used."""
+    def __init__(self) -> None:
+        self.name = "CryptoToken"
+        self.description = "A single-use token to acquire or repair rigs."
+        self.encrypted = False
+        self.meta = {"consumable": True}
 
-class DataSpike(Asset):
-    def __init__(self):
-        super().__init__("DataSpike", "Used in battles.")
 
-class RemovableDrive(Asset):
-    def __init__(self):
-        super().__init__("RemovableDrive","Found in rigs and used for extraction.")
-
-class SecurityChip(Asset):
-    def __init__(self):
-        super().__init__("SecurityChip", "Used to encrypt or decrypt assets.")
-
-class HardwarePatch(Asset):
-    def __init__(self):
-        super().__init__("HardwarePatch", "Used to upgrade rigs.")
 
