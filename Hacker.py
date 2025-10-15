@@ -7,12 +7,15 @@ Username: <username>
 This is my own work as defined by the University's Academic Misconduct Policy.
 """
 
-# File: Hacker.py
-# Description: This class represents a hacker that has a name, a rig name, trace level and inventory contents.
-# Author: Emily Chuong
-# ID: 110448094
-# Username: Chuey008
-# This is my own work as defined by the University's Academic Misconduct Policy.
+"""
+File: Hacker.py
+Description: The class represents a hacker with a name, has a CryptoToken, trace level, able to launch data spike 
+from rigs, encrypt their assets, upgrade their rig through a Hardware Patch, store and retrieve assets.
+Author: Emily Chuong
+ID: 110448094
+Username: Chuey008
+This is my own work as defined by the University's Academic Misconduct Policy.
+"""
 
 # Will need to remember to import asset from Assets file
 

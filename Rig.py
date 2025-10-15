@@ -7,12 +7,14 @@ Username: <username>
 This is my own work as defined by the University's Academic Misconduct Policy.
 """
 
-# File: Rig.py
-# Description: The rig is a computer object that has a name, damage counter (starting at 0), a broken state (False) and a storage for assets.
-# Author: Emily Chuong
-# ID: 110448094
-# Username: Chuey008
-# This is my own work as defined by the University's Academic Misconduct Policy.
+"""
+File: Rig.py
+Description: The class represents a computer, that has a name, damage counter (starting at 0), broken state (False) and storage for assets.
+Author: Emily Chuong
+ID: 110448094
+Username: Chuey008
+This is my own work as defined by the University's Academic Misconduct Policy.
+"""
 
 # from asset import Assets, DataSpike, RemovableDrive, CryptoToken, HardwarePatch, SecurityChip
 
@@ -26,7 +28,7 @@ class Rig:
 
     def take_hit(self):
         effective_threshold = 2 + self.upgrade_level
-        self.damag += 1
+        self.damage += 1
         if self.damage >= effective_threshold:
             self.broken = True
 
