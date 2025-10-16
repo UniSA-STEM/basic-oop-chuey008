@@ -1,19 +1,10 @@
 """
 File: Hacker.py
-Description: <A brief description of this Python module.>
-Author: <full name>
-ID: <student_id>
-Username: <username>
-This is my own work as defined by the University's Academic Misconduct Policy.
-"""
-
-"""
-File: Hacker.py
-Description: The class represents a hacker with a name, has a CryptoToken, trace level, able to launch data spike 
-from rigs, encrypt their assets, upgrade their rig through a Hardware Patch, store and retrieve assets.
-Author: Emily Chuong
-ID: 110448094
-Username: Chuey008
+Description: <The class represents a hacker with a name, has a CryptoToken, trace level, able to launch data spike
+from rigs, encrypt their assets, upgrade their rig through a Hardware Patch, store and retrieve assets.>
+Author: <Emily Chuong>
+ID: <110448094>
+Username: <Chuey008>
 This is my own work as defined by the University's Academic Misconduct Policy.
 """
 
@@ -23,8 +14,10 @@ This is my own work as defined by the University's Academic Misconduct Policy.
 
 
 class Hacker:
-    """Represents a Hacker with an inventory, a rig and trace level with a level and threshold.
-    Inventory will hold the Assets and contains one CryptoToken."""
+    """
+    Represents a Hacker with an inventory, a rig and trace level with a level and threshold.
+    Inventory will hold the Assets and contains one CryptoToken.
+    """
     def __init__(self, name: str):
         self.name = name
         self.inventory = [CryptoToken()]
@@ -33,16 +26,20 @@ class Hacker:
         self.trace_threshold = 5
 
     def scan_inventory_for(self, item_name: str):
-        """Scans the inventory for a certain item."""
+        """
+        Scans the inventory for a certain item.
+        """
         for item in self.inventory:
             if item.name == item_name:
                 return item
             return None
 
     def acquire_rig(self, rig=None):
-        """Acquiring a rig using the already given CryptoToken
+        """
+        Acquiring a rig using the already given CryptoToken
         Checks to see if a rig already exists using a Boolean and if it doesn't exist
-        Will create one if the Hacker has a CryptoToken in their inventory"""
+        Will create one if the Hacker has a CryptoToken in their inventory
+        """
         if self.rig:
             print("Rig already acquired.")
             return False
@@ -61,9 +58,11 @@ class Hacker:
             return False
 
     def launch_data_spike(self, target_rig: Rig) -> bool:
-        """Launching Data Spikes on other rigs and consuming a Data Spike from their own rig storage
-          Checks to see if there is a rig to launch Data Spikes from
-          True if there is, False if there isn't"""
+        """
+        Launching Data Spikes on other rigs and consuming a Data Spike from their own rig storage
+        Checks to see if there is a rig to launch Data Spikes from
+        True if there is, False if there isn't.
+        """
         if self.rig is None:
             print("No rig to launch spikes from.")  # checks to see if a rig exists
             return False
