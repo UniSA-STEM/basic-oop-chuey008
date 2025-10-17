@@ -8,6 +8,7 @@ This is my own work as defined by the University's Academic Misconduct Policy.
 """
 
 from Asset import DataSpike, RemovableDrive, CryptoToken, HardwarePatch, SecurityChip
+import random
 
 class Rig:
     """
@@ -79,7 +80,7 @@ class Rig:
             return False
 
     # ---------------------- Damage/ Repair/ Upgrade Section----------------------
-   def damage_threshold(self):
+    def damage_threshold(self):
        """
        Base threshold is 2 plus the upgrade level. Used to calculate when the rig breaks.
        The more upgrades the rig has, the more damage it can take
@@ -120,3 +121,44 @@ class Rig:
         self._upgrade_level += 1
         return True
 
+    # ---------------------- Asset Generation Section----------------------
+    def generate_asset(self, asset: object):
+        """
+        Generate one asset and store it. If asset is None, will randomly create one.
+        """
+        if asset is None:
+            # two DataSpikes, one RemovableDrive, one generic Asset - randomly assigned to a
+            choices = [DataSpike(), DataSpike(), RemovableDrive(), Asset()]
+            a = random.choice(choices)
+        else:
+            a = asset
+            self.store_asset(a)
+            return a
+
+    # ---------------------- Condition of Rig and Explicit getters Section----------------------
+    def condition(self):
+        """
+        Return the rig's condition based on damage and upgrade level.
+        """
+        lvl = self._upgrade_level
+        if self._broken:
+            return f"Broken (Level {lvl}"
+        if self._damage == 0:
+            return f"Pristine (Level {lvl}"
+        return f"Damaged {self._damage}/{self._damage_threshold()} with an Upgrade Level of: {lvl}"
+
+    # Explicit getters as it is protected attributes
+    def get_name(self):
+        return self._name
+
+    def get_damage(self):
+        return self._damage
+
+    def is_broken(self):
+        return self._broken
+
+    def get_upgrade_level(self):
+        return self._upgrade_level
+
+    def __str__(self):
+        return f"{self._name} - {self.condition()} - Stored: {len(self._storage)} items"
