@@ -18,8 +18,7 @@ class Rig:
         self._damage = 0
         self._broken = False
         self._upgrade_level = 0
-        # starting with 2 DataSpikes and 1 RemovableDrive
-        self._storage = [DataSpike(), DataSpike(), RemovableDrive()]
+        self._storage = [DataSpike(), DataSpike(), RemovableDrive()]  # starting with 2 DataSpikes and 1 RemovableDrive
 
     # ----------------------Public Storage API Section----------------------
     # creating a storage for the asset to be stored and extracted from
@@ -57,31 +56,67 @@ class Rig:
         """
         return [a.name for a in self._storage]
 
-    def
+    def encrypt_asset_in_storage(self, name):
+        """
+        Encrypt an asset by name in storage.
+        Return False if asset is not found.
+        """
+        for a in self._storage:
+            if a.name == name:
+                a.encrypt()
+                return True
+            return False
 
     def decrypt_asset_in_storage(self, name):
         """
         Decrypt an asset from storage.
         Return False if not found.
         """
-        for a in self.
+        for a in self._storage:
+            if a.name == name:
+                a.decrypt()
+                return True
+            return False
+
+    # ---------------------- Damage/ Repair/ Upgrade Section----------------------
+   def damage_threshold(self):
+       """
+       Base threshold is 2 plus the upgrade level. Used to calculate when the rig breaks.
+       The more upgrades the rig has, the more damage it can take
+       """
+       return 2 + self._upgrade_level
 
     def take_hit(self):
-        effective_threshold = 2 + self.upgrade_level
-        self.damage += 1
-        if self.damage >= effective_threshold:
-            self.broken = True
+        """
+        Apply a single hit, rig is broken if threshold of damage is reached.
+        """
+        if self._broken:  # if rig is already broken, does nothing
+            return
+        self._damage += 1
+        if self._damage >= self.damage_threshold():
+            self._broken = True
 
-    def upgrade(self, patch: HardwarePatch) -> bool:
-        # consume patch externally (caller removes it from inventory)
-        self.upgrade_level += 1
+    def repair(self, token: object):
+        """
+        Repair with a CryptoToken. Hacker will consume token.
+        Returns False if no CryptoToken or if nothing is used to repair rig.
+        """
+        if not isinstance (token, CryptoToken):  # checks if the object is valid, e.g. CryptoToken
+            return False
+        if self._damage == 0 and not self._broken:  # if the rig isn't damaged or broken
+            print(f"{self._name}: No repair is needed.")
+            return False
+        self._damage = 0  # reset back to 0
+        self._broken = False
         return True
 
-    def repair(self, token: CryptoToken) -> bool:
-        if self.damage == 0 and not self.broken:
-            print("No repair needed.")
+    def upgrade(self, patch: object):
+        """
+        Upgrade rig using a HardwarePatch. Hack will consume patch.
+        Returns True on success.
+        """
+        if not isinstance(patch, HardwarePatch):  # checks if the object is valid, e.g. HardwarePatch
             return False
-        self.damage = 0
-        self.broken = False
+        self._upgrade_level += 1
         return True
 
