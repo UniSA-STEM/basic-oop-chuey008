@@ -7,7 +7,7 @@ Username: <Chuey008>
 This is my own work as defined by the University's Academic Misconduct Policy.
 """
 
-from Asset import DataSpike, RemovableDrive, CryptoToken, HardwarePatch, SecurityChip
+from Asset import DataSpike, RemovableDrive, CryptoToken, HardwarePatch, SecurityChip, Asset
 import random
 
 class Rig:
