@@ -7,7 +7,7 @@ Username: <Chuey008>
 This is my own work as defined by the University's Academic Misconduct Policy.
 """
 
-from Asset import DataSpike, RemovableDrive, CryptoToken, HardwarePatch, SecurityChip, Asset
+from Asset import DataSpike, RemovableDrive, CryptoToken, HardwarePatch, Asset
 import random
 
 class Rig:
@@ -97,12 +97,12 @@ class Rig:
         if self._damage >= self.damage_threshold():
             self._broken = True
 
-    def repair(self, token: object):
+    def repair(self, token):
         """
         Repair with a CryptoToken. Hacker will consume token.
         Returns False if no CryptoToken or if nothing is used to repair rig.
         """
-        if not isinstance (token, CryptoToken):  # checks if the object is valid, e.g. CryptoToken
+        if not isinstance(token, CryptoToken):  # checks if the object is valid, e.g. CryptoToken
             return False
         if self._damage == 0 and not self._broken:  # if the rig isn't damaged or broken
             print(f"{self._name}: No repair is needed.")
@@ -111,7 +111,7 @@ class Rig:
         self._broken = False
         return True
 
-    def upgrade(self, patch: object):
+    def upgrade(self, patch):
         """
         Upgrade rig using a HardwarePatch. Hack will consume patch.
         Returns True on success.
@@ -128,12 +128,13 @@ class Rig:
         """
         if asset is None:
             # two DataSpikes, one RemovableDrive, one generic Asset - randomly assigned to a
-            choices = [DataSpike(), DataSpike(), RemovableDrive(), Asset()]
+            choices = [DataSpike(), DataSpike(), RemovableDrive(),
+                       Asset("GenericAsset", "A generic asset", False, {})]
             a = random.choice(choices)
         else:
             a = asset
-            self.store_asset(a)
-            return a
+        self.store_asset(a)
+        return a
 
     # ---------------------- Condition of Rig and Explicit getters Section----------------------
     def condition(self):
