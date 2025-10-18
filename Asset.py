@@ -17,18 +17,33 @@ class Asset:
         self._encrypted = encrypted
         self._meta = meta or {}  # added another attribute, consumable meaning if it gets consumed or destroyed after a single use
 
+    def getName(self):
+        return self._name
+
+    def getDescription(self):
+        return self._description
+
+    def isEncrypted(self):
+        return self._encrypted
+
     def encrypt(self):
-        self.encrypted = True
+        self._encrypted = True
 
     def decrypt(self):
-        self.encrypted = False
+        self._encrypted = False
+
+    def getMeta(self):
+        return self._meta
+
+    def setMeta(self, meta):
+        self._meta = meta
 
     # String conversion method format as described in the spec sheet
     def __str__(self):
-        format = f"<{self.name}>:<{self.description}>"
-        return f"{format} [Encrypted]" if self.encrypted else format
+        format_str = f"<{self.getName}>:<{self.getDescription()}>"
+        return f"{format_str} [Encrypted]" if self._encrypted else format_str
 
-# Core assets
+# ----------------------Core Assets Section----------------------
 class CryptoToken:
     """
     CryptoToken: used to acquire or repair rigs, this is to be used.
@@ -38,10 +53,28 @@ class CryptoToken:
         self._description = "A single-use token to acquire or repair rigs."
         self._encrypted = False
         self._meta = {"consumable": True}
-    def encrypt(self): self.encrypted = True
-    def decrypt(self): self.encrypted = False
+
+    def getName(self):
+        return self._name
+
+    def getDescription(self):
+        return self._description
+
+    def isEncrypted(self):
+        return self._encrypted
+
+    def encrypt(self):
+        self._encrypted = True
+
+    def decrypt(self):
+        self._encrypted = False
+
+    def getMeta(self):
+        return self._meta
+
     def __str__(self):
-        return f"{format}[Encrypted]" if self.encrypted else format
+        format_str = f"<{self.getName()}>:{self.getDescription()}"
+        return f"{format_str} [Encrypted]" if self._encrypted else format_str
 
 class DataSpike:
     """
@@ -52,8 +85,28 @@ class DataSpike:
         self._description = "Used to attack rigs."
         self._encrypted = False
         self._meta = {"consumable": True}
+
+    def getName(self):
+        return self._name
+
+    def getDescription(self):
+        return self._description
+
+    def isEncrypted(self):
+        return self._encrypted
+
+    def encrypt(self):
+        self._encrypted = True
+
+    def decrypt(self):
+        self._encrypted = False
+
+    def getMeta(self):
+        return self._meta
+
     def __str__(self):
-        return f"{format}[Encrypted]" if self.encrypted else format
+        format_str = f"<{self.getName()}>:{self.getDescription()}"
+        return f"{format_str} [Encrypted]" if self._encrypted else format_str
 
 class RemovableDrive:
     """
@@ -64,8 +117,28 @@ class RemovableDrive:
         self._description = "Used to extract data from broken rigs."
         self._encrypted = False
         self._meta = {"Consumable": True}
+
+    def getName(self):
+        return self._name
+
+    def getDescription(self):
+        return self._description
+
+    def isEncrypted(self):
+        return self._encrypted
+
+    def encrypt(self):
+        self._encrypted = True
+
+    def decrypt(self):
+        self._encrypted = False
+
+    def getMeta(self):
+        return self._meta
+
     def __str__(self):
-        return f"{format}[Encrypted]" if self.encrypted else format
+        format_str = f"<{self.getName()}>:{self.getDescription()}"
+        return f"{format_str} [Encrypted]" if self._encrypted else format_str
 
 class SecurityChip:
     """
@@ -76,8 +149,28 @@ class SecurityChip:
         self._description = "Used to encrypt and decrypt assets."
         self._encrypted = False
         self._meta = {"Consumable": False}
+
+    def getName(self):
+        return self._name
+
+    def getDescription(self):
+        return self._description
+
+    def isEncrypted(self):
+        return self._encrypted
+
+    def encrypt(self):
+        self._encrypted = True
+
+    def decrypt(self):
+        self._encrypted = False
+
+    def getMeta(self):
+        return self._meta
+
     def __str__(self):
-        return f"{format}[Encrypted]" if self.encrypted else format
+        format_str = f"<{self.getName()}>:{self.getDescription()}"
+        return f"{format_str} [Encrypted]" if self._encrypted else format_str
 
 class HardwarePatch:
     """
@@ -88,5 +181,25 @@ class HardwarePatch:
         self._description = "Used to upgrade rigs."
         self._encrypted = False
         self._meta = {"Consumable": True}
+
+    def getName(self):
+        return self._name
+
+    def getDescription(self):
+        return self._description
+
+    def isEncrypted(self):
+        return self._encrypted
+
+    def encrypt(self):
+        self._encrypted = True
+
+    def decrypt(self):
+        self._encrypted = False
+
+    def getMeta(self):
+        return self._meta
+
     def __str__(self):
-        return f"{format}[Encrypted]" if self.encrypted else format
+        format_str = f"<{self.getName()}>:{self.getDescription()}"
+        return f"{format_str} [Encrypted]" if self._encrypted else format_str
