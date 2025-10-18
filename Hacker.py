@@ -53,7 +53,7 @@ class Hacker:
         """
         Scans the inventory for a certain item by _name or class name.
         """
-        idx = self._find_index_by_name(name)
+        idx = self.find_index_by_name(name)
         if idx is None:
             return None
         return self._inventory.pop(idx)
@@ -95,7 +95,7 @@ class Hacker:
         Checks to see if a rig already exists using a Boolean and if it doesn't exist
         Will create one if the Hacker has a CryptoToken in their inventory
         """
-        token_idx = self._find_index_by_class(CryptoToken)  # scans for a CryptoToken to be used to acquire a rig
+        token_idx = self.find_index_by_class(CryptoToken)  # scans for a CryptoToken to be used to acquire a rig
         if token_idx is None:
             print(f"{self._name}: Need a CryptoToken to acquire a rig")
             return False
@@ -154,7 +154,7 @@ class Hacker:
         if self._trace_level > self._trace_threshold:  # trace level greater than trace threshold than no launch of data spike
             print("Trace level is too high to launch attack.")
             return False
-        if self._target is None:  # checks to see if there is a target to launch DataSpike at
+        if self.target is None:  # checks to see if there is a target to launch DataSpike at
             print(f"{self._name}: No target rig detected.")
             return False
 
@@ -182,7 +182,7 @@ class Hacker:
         if not target.is_broken:  # checks to see if the targeted rig is broken
             print(f"{self._name}: Target rig is not broken; cannot extract.")
             return False
-        rd_idx = self._find_index_by_class(RemovableDrive)  # checks to see if there is a RemovableDrive
+        rd_idx = self.find_index_by_class(RemovableDrive)  # checks to see if there is a RemovableDrive
         if rd_idx is None:
             print(f"{self._name}: No RemovableDrive available to extract.")
             return False
@@ -200,7 +200,7 @@ class Hacker:
         """
         Return True if SecurityChip is in inventory or in rig storage.
         """
-        if self._find_index_by_class(SecurityChip) is not None:
+        if self.find_index_by_class(SecurityChip) is not None:
             return True
         if include_rig and self._rig is not None:
             return self._rig_has_asset("SecurityChip")
@@ -211,10 +211,10 @@ class Hacker:
         Encrypt asset in inventory or rig storage; requires one SecurityChip.
         """
         if location == "inventory":  # checks inventory for SecurityChip
-            if not self._has_security_chip(False):  # checks inventory for SecurityChip and checks encryption
+            if not self.has_security_chip(False):  # checks inventory for SecurityChip and checks encryption
                 print(f"{self._name}: No SecurityChip available to encrypt.")
                 return False
-            idx = self._find_index_by_name(name)
+            idx = self.find_index_by_name(name)
             if idx is None:
                 print(f"{self._name}: Asset {name} not found in inventory.")
                 return False
@@ -225,7 +225,7 @@ class Hacker:
             if self._rig is None:
                 print(f"{self._name}: No rig to encrypt assets in.")
                 return False
-            if not self._has_security_chip(True):
+            if not self.has_security_chip(True):
                 print(f"{self._name}: No SecurityChip available to encrypt in rig.")
                 return False
             success = self._rig.encrypt_asset_in_storage(name)
@@ -243,10 +243,10 @@ class Hacker:
         Decrypt asset in inventory or rig storage; requires one SecurityChip.
         """
         if location == "inventory":  # checks inventory for SecurityChip and checks decryption
-            if not self._has_security_chip(False):
+            if not self.has_security_chip(False):
                 print(f"{self._name}: No SecurityChip available to decrypt.")
                 return False
-            idx = self._find_index_by_name(name)
+            idx = self.find_index_by_name(name)
             if idx is None:
                 print(f"{self._name}: Asset {name} not found in inventory.")
                 return False
@@ -257,7 +257,7 @@ class Hacker:
             if self._rig is None:
                 print(f"{self._name}: No rig to decrypt assets in.")
                 return False
-            if not self._has_security_chip(True):
+            if not self.has_security_chip(True):
                 print(f"{self._name}: No SecurityChip available to decrypt in rig.")
                 return False
             success = self._rig.decrypt_asset_in_storage(name)
@@ -290,7 +290,7 @@ class Hacker:
                 moved.append(asset_name_str)
         else:
             for n in list(names):  # Move specified assets
-                idx = self._find_index_by_name(n)
+                idx = self.find_index_by_name(n)
                 if idx is None:
                     continue
                 a = self._inventory.pop(idx)
@@ -329,16 +329,16 @@ class Hacker:
         return moved
 
     # ---------------------- Explicit Getters Section----------------------
-    def getName(self):
+    def ge_name(self):
         return self._name
 
-    def getRig(self):
+    def get_rig(self):
         return self._rig
 
-    def getTraceLevel(self):
+    def get_trace_level(self):
         return self._trace_level
 
     def __str__(self):
         rig_name = self._rig.name if self._rig else "None"
         return (f"{self._name} - Rig: {rig_name} - Trace: "
-                f"{self._trace_level}/{self._trace_threshold} - Inventory: {self._inventory_summary()}")
+                f"{self._trace_level}/{self._trace_threshold} - Inventory: {self.inventory_summary()}")
