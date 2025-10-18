@@ -339,6 +339,6 @@ class Hacker:
         return self._trace_level
 
     def __str__(self):
-        rig_name = self._rig.name if self._rig else "None"
+        rig_name = self._rig.get_name if self._rig else "None"
         return (f"{self._name} - Rig: {rig_name} - Trace: "
                 f"{self._trace_level}/{self._trace_threshold} - Inventory: {self.inventory_summary()}")
