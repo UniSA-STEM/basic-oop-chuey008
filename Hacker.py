@@ -8,10 +8,8 @@ Username: <Chuey008>
 This is my own work as defined by the University's Academic Misconduct Policy.
 """
 
-# Will need to remember to import asset from Assets file
-
-# From rig import Rig
-
+from Asset import CryptoToken, DataSpike, RemovableDrive, SecurityChip, HardwarePatch
+from Rig import Rig
 
 class Hacker:
     """
@@ -19,20 +17,58 @@ class Hacker:
     Inventory will hold the Assets and contains one CryptoToken.
     """
     def __init__(self, name: str):
-        self.name = name
-        self.inventory = [CryptoToken()]
-        self.rig = None
-        self.trace_level = 0
-        self.trace_threshold = 5
+        self._name = name
+        self._inventory = [CryptoToken()]
+        self._rig = None
+        self._trace_level = 0
+        self._trace_threshold = 5
 
-    def scan_inventory_for(self, item_name: str):
+    # ---------------------- Inventory Enablers Section----------------------
+    def find_index_by_class(self, cls):
         """
-        Scans the inventory for a certain item.
+        Return index of first item that is the instance of a given class (cls), or None.
+        Used to locate items like DataSpike and RemovableDrive.
         """
-        for item in self.inventory:
-            if item.name == item_name:
-                return item
+        for i, a in enumerate(self._inventory):
+            if isinstance(a, cls):
+                return i
+        return None
+
+    def find_index_by_name(self, name):
+        """
+        Return index of first item with matching _name or class name.
+        """
+        for i, a in enumerate(self._inventory):
+            try:
+                if a._name == name or type(a).__name__ == name:
+                    return i
+            except AttributeError:  # if a doesn't have _name, catches the AttributeError and checks the class name
+                if type(a).__name__ == name:
+                    return i
+        return None
+
+    def add_to_inventory(self, Asset: object):
+        """
+        Add an asset to the inventory.
+        """
+        self._inventory.append(Asset)
+
+    def scan_inventory_for(self, name: str):
+        """
+        Scans the inventory for a certain item by _name or class name.
+        """
+        item = self._find_item_by_name(name)
+        if item is None:
             return None
+        return self._inventory.pop(item)
+
+    def inventory_summary(self):
+        """
+        Returns a simple summary of the inventory contents to be displayed.
+        """
+        if not self._inventory:
+            return "Empty Inventory"
+        return "; ".join(str(a) for a in self._inventory)
 
     def acquire_rig(self, rig=None):
         """
