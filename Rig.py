@@ -122,7 +122,7 @@ class Rig:
         return True
 
     # ---------------------- Asset Generation Section----------------------
-    def generate_asset(self, asset: object):
+    def generate_asset(self, asset):
         """
         Generate one asset and store it. If asset is None, will randomly create one.
         """
