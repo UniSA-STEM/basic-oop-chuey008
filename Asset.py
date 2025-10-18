@@ -40,7 +40,7 @@ class Asset:
 
     # String conversion method format as described in the spec sheet
     def __str__(self):
-        format_str = f"<{self.getName}>:<{self.getDescription()}>"
+        format_str = f"<{self.getName()}>:<{self.getDescription()}>"
         return f"{format_str} [Encrypted]" if self._encrypted else format_str
 
 # ----------------------Core Assets Section----------------------
