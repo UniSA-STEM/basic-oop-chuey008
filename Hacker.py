@@ -95,7 +95,7 @@ class Hacker:
         return self._trace > self._trace_threshold
 
     # ---------------------- Rig Management Section----------------------
-     def acquire_rig(self, rig=None):
+    def acquire_rig(self, rig=None):
         """
         Acquiring a rig using the already given CryptoToken.
         Checks to see if a rig already exists using a Boolean and if it doesn't exist
@@ -147,24 +147,58 @@ class Hacker:
             print(f"{self._name}: Repaired rig {self._rig.name}.")
             return success
 
-    def launch_data_spike(self, target_rig: Rig) -> bool:
+    # ---------------------- Battle Section----------------------
+    def launch_data_spike(self, spikes):
         """
         Launching Data Spikes on other rigs and consuming a Data Spike from their own rig storage
         Checks to see if there is a rig to launch Data Spikes from
         True if there is, False if there isn't.
         """
-        if self.rig is None:
+        if self._rig is None:
             print("No rig to launch spikes from.")  # checks to see if a rig exists
             return False
-        if self.trace_level > self.trace_threshold:  # trace level greater than trace threshold than no launch of data spike
+        if self._trace_level > self._trace_threshold:  # trace level greater than trace threshold than no launch of data spike
             print("Trace level is too high to launch attack.")
             return False
-        spike = self.rig.release_asset_by_name('DataSpike')
-        if spike is None:
-            print("No Data Spike is available.")
+        if self._target is None:  # checks to see if there is a target to launch DataSpike at
+            print(f"{self._name}: No target rig detected.")
             return False
-        target_rig.take_hit()
-        self.increase_trace(2)
-        return True
 
+        launched = 0
+        for _ in range(spikes):
+            spike = self._rig.release_asset_by_name("DataSpike")
+            if spike is None:
+                print(f"{self._name}: No DataSpike is available in this rig.")
+                continue
+            self._target.take_hit()
+            self.increase_trace(2)
+            launched += 1
+            print(f"{self._name}: Launched DataSpike at {self._target.name}; target damage now {self._target.damage}.")
+            if self._target.broken:
+                print(f"{self._target.name} is broken.")
+                break
+
+            return launched > 0
+
+        # ---------------------- Extraction Section----------------------
+        def extract_from_rig(self, target: Rig):
+            """
+            Extract all unencrypted assets from a broken rig using a RemovableDrive in inventory.
+            Consumes the RemovableDrive and transfers unencrypted assets to hacker's inventory.
+            """
+            if not target.broken:  # checks to see if the targeted rig is broken
+                print(f"{self._name}: Target rig is not broken; cannot extract.")
+                return False
+            rd_idx = self._find_index_by_class(RemovableDrive)  # checks to see if there is a RemovabelDrive
+            if rd_idx is None:
+                print(f"{self._name}: No RemovableDrive available to extract.")
+                return False
+            # consume one drive
+            self._inventory.pop(rd_idx)
+            extracted = target.release_all_unencrypted()
+            for a in extracted:
+                self._inventory.append(a)
+            self.increase_trace(3)
+            print(f"{self._name}: Extracted {len(extracted)} assets from {target.name}.")
+            return True
 
