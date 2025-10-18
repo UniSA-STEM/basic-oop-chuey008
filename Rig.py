@@ -14,7 +14,7 @@ class Rig:
     """
     Creating a rig that contains the below attributes.
     """
-    def __init__(self, name: str):
+    def __init__(self, name):
         self._name = name
         self._damage = 0
         self._broken = False
@@ -24,21 +24,24 @@ class Rig:
     # ----------------------Public Storage API Section----------------------
     # creating a storage for the asset to be stored and extracted from
     def store_asset(self, asset):
+        """
+        Add an asset to storage.
+        """
         self._storage.append(asset)
 
-    # checks to see if there are any assets in storage
     def has_asset(self, name):
-        return any(a.name == name for a in self._storage)
+        """
+        Checks if an asset by name exists in storage.
+        """
+        return any(a.getName() == name for a in self._storage)
 
-    def release_asset_by_name(self, n):
+    def release_asset_by_name(self, name):
         """
         Remove and return the first matching asset by name if it is not encrypted.
         Return Empty if missing or encrypted.
         """
         for i, a in enumerate(self._storage):
-            if a.name == n:  # directly accesses the asset's name
-                if a.encrypted:  # checks if asset is encrypted
-                    return None # if encrypted it will not release
+            if a.getName == name and not a.isEncrypted():  # directly accesses the asset's name
                 return self._storage.pop(i)  # return and remove encrypted asset
         return None
 
@@ -46,16 +49,16 @@ class Rig:
         """
         Remove and return all unencrypted assets. Used for extraction.
         """
-        unencrypt = [a for a in self._storage if not a.encrypted is False]  # not sure if this is needed
-        self._storage = [a for a in self._storage if a.encrypted is False]  # check
+        unencrypt = [a for a in self._storage if not a.isEncrypted()]  # checks to see if asset in storage is encrypted
+        self._storage = [a for a in self._storage if a.isEncrypted()]
         return unencrypt
 
-    def get_storage_summary(self, name):
+    def get_storage_summary(self):
         """
         Return a summary of what is currently stored inside storage.
         Read-only, for testing purposes.
         """
-        return [a.name for a in self._storage]
+        return [a.getName for a in self._storage]
 
     def encrypt_asset_in_storage(self, name):
         """
@@ -63,7 +66,7 @@ class Rig:
         Return False if asset is not found.
         """
         for a in self._storage:
-            if a.name == name:
+            if a.getName() == name:
                 a.encrypt()
                 return True
             return False
@@ -74,7 +77,7 @@ class Rig:
         Return False if not found.
         """
         for a in self._storage:
-            if a.name == name:
+            if a.getName() == name:
                 a.decrypt()
                 return True
             return False
@@ -130,11 +133,9 @@ class Rig:
             # two DataSpikes, one RemovableDrive, one generic Asset - randomly assigned to a
             choices = [DataSpike(), DataSpike(), RemovableDrive(),
                        Asset("GenericAsset", "A generic asset", False, {})]
-            a = random.choice(choices)
-        else:
-            a = asset
-        self.store_asset(a)
-        return a
+            asset = random.choice(choices)
+        self.store_asset(asset)
+        return asset
 
     # ---------------------- Condition of Rig and Explicit getters Section----------------------
     def condition(self):
