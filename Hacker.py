@@ -94,29 +94,58 @@ class Hacker:
         """
         return self._trace > self._trace_threshold
 
-
-    def acquire_rig(self, rig=None):
+    # ---------------------- Rig Management Section----------------------
+     def acquire_rig(self, rig=None):
         """
-        Acquiring a rig using the already given CryptoToken
+        Acquiring a rig using the already given CryptoToken.
         Checks to see if a rig already exists using a Boolean and if it doesn't exist
         Will create one if the Hacker has a CryptoToken in their inventory
         """
-        if self.rig:
-            print("Rig already acquired.")
+        token_idx = self._find_index_by_class(CryptoToken)  # scans for a CryptoToken to be used to acquire a rig
+        if token_idx is None:
+            print(f"{self._name}: Need a CryptoToken to acquire a rig")
             return False
-        if rig is None:
-            self.rig = Rig(f"{self.name}'s Rig")
-        else:
-            self.rig = rig
-        #Consume one CryptoToken
-        token = self.scan_inventory_for_type(CryptoToken)  # scans for a CryptoToken to be used to acquire a rig
-        if token:
-            self.inventory.remove(token)
-            print(f"{self.name} acquired rig: {self.rig.name}")
-            return True
-        else:
-            print("No CryptoToken to activate rig")
+        self._inventory.pop(token_idx)  # consume on CryptoToken
+        if rig is None:  # creates a new rig if none was passed in
+            rig = Rig(f"{self._name}'s Rig")
+        self._rig = rig
+        print("{self._name} activated rig {self._rig.name}")
+        return True
+
+    def upgrade_rig(self):
+        """
+        Upgrade the rig using a HardwarePatch from inventory.
+        Returns True if upgrade is successful, False otherwise.
+        """
+        if self._rig is None:
+            print(f"{self._name}: No rig to upgrade")
             return False
+        patch_idx = self.find_index_by_class(HardwarePatch)
+        if patch_idx is None:
+            print(f"{self._name}: No HardwarePatch is available.")
+            return False
+        patch = self._inventory.pop(patch_idx)
+        success = self._rig.upgrade(patch)
+        if success:
+            print(f"{self._name}: Upgraded rig to level {self._rig.get_upgrade_level()}.")
+        return success
+
+    def repair_rig(self):
+        """
+        Repairs the rig using a CryptoToken from inventory and is consumed.
+        """
+        if self._rig is None:
+            print(f"{self._name}: No rig to repair.")
+            return False
+        token_idx = self.find_index_by_class(CryptoToken)
+        if token_idx is None:
+            print(f"{self._name}: No CryptoToken is available for repair")
+            return False
+        token = self._inventory.pop(token_idx)
+        success = self._rig.repair(token)
+        if success:
+            print(f"{self._name}: Repaired rig {self._rig.name}.")
+            return success
 
     def launch_data_spike(self, target_rig: Rig) -> bool:
         """
