@@ -341,3 +341,17 @@ class Hacker:
         print(f"{self._name}: Retrieved {len(moved)} assets from rig.")
         return moved
 
+    # ---------------------- Explicit Getters Section----------------------
+    def get_name(self):
+        return self._name
+
+    def get_rig(self):
+        return self._rig
+
+    def get_trace_level(self):
+        return self._trace_level
+
+    def __str__(self):
+        rig_name = self._rig.name if self._rig else "None"
+        return (f"{self._name} - Rig: {rig_name} - Trace: "
+                f"{self._trace_level}/{self._trace_threshold} - Inventory: {self._inventory_summary()}")
