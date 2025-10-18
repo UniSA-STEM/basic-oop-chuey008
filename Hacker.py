@@ -110,7 +110,7 @@ class Hacker:
 
         self._inventory.pop(token_idx)  # remove the CryptoToken from inventory
 
-        print(f"{self._name} activated rig - Nova")
+        print(f"{self._name} activated a rig")
         return True
 
     def upgrade_rig(self):
