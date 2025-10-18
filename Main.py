@@ -32,5 +32,28 @@ def test_acquire_and_upgrade():
 
     print(hacker.get_rig())
 
+def test_data_spike_attack():
+    attacker = Hacker("Trinity")
+    defender = Hacker("Cypher")
+
+    attacker.add_to_inventory(CryptoToken())
+    defender.add_to_inventory(CryptoToken())
+    attacker.acquire_rig()
+    defender.acquire_rig()
+
+    # Load attacker rig with DataSpikes
+    attacker.store_to_rig([DataSpike().getName(), DataSpike().getName()])
+
+    # Launch attack
+    attacker.launch_data_spike(defender.get_rig(), spikes=2)
+    print(defender.get_rig())
+
+def run_all_tests():
+    print("\n--- Test: Acquire and Upgrade ---")
+    test_acquire_and_upgrade()
+
+    print("\n--- Test: Data Spike ---")
+    test_data_spike_attack()
+
 if __name__ == "__main__":
-    main()
+    run_all_tests()
