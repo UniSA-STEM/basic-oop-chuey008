@@ -180,7 +180,7 @@ class Hacker:
 
             return launched > 0
 
-        # ---------------------- Extraction Section----------------------
+    # ---------------------- Extraction Section----------------------
     def extract_from_rig(self, target: Rig):
         """
         Extract all unencrypted assets from a broken rig using a RemovableDrive in inventory.
@@ -202,7 +202,7 @@ class Hacker:
         print(f"{self._name}: Extracted {len(extracted)} assets from {target.name}.")
         return True
 
-        # ---------------------- Encrypt/ Decrypt Section----------------------
+    # ---------------------- Encrypt/ Decrypt Section----------------------
     def has_security_chip(self, include_rig):
         """
         Return True if SecurityChip is in inventory or in rig storage.
@@ -282,4 +282,62 @@ class Hacker:
         else:
             print("Invalid location; use 'inventory' or 'rig'.")
             return False
+
+    # ---------------------- Transfers of Asset Section----------------------
+    def store_to_rig(self, names):
+        """
+        Store assets from inventory to rig storage, if names is None, move all assets.
+        Returns list of moved asset names.
+        """
+        if self._rig is None:
+            print(f"{self._name}: No rig to store assets in.")
+            return []
+        moved = []
+
+        if not names:
+            to_move = list(self._inventory)  # move all assets
+            self._inventory.clear()
+            for a in to_move:
+                self._rig.store_asset(a)
+                asset_name_str = a.asset_name  # Access asset_name directly
+                moved.append(asset_name_str)
+        else:
+            for n in list(names):  # Move specified assets
+                idx = self._find_index_by_name(n)
+                if idx is None:
+                    continue
+                a = self._inventory.pop(idx)
+                self._rig.store_asset(a)
+                asset_name_str = a.asset_name
+                moved.append(asset_name_str)
+
+        print(f"{self._name}: Stored {len(moved)} assets to rig.")
+        return moved
+
+    def retrieve_from_rig(self, names):
+        """
+        Retrieve assets from rig storage, if names is None, retrieve all unencrypted assets.
+        Returns list of retrieved asset names.
+        """
+        if self._rig is None:
+            print(f"{self._name}: No rig to retrieve assets from.")
+            return []
+        moved = []
+
+        if not names:
+            assets = self._rig.release_all_unencrypted()  # Retrieve all unencrypted assets
+            for a in assets:
+                self._inventory.append(a)
+                asset_name_str = a.asset_name
+                moved.append(asset_name_str)
+        else:
+            for n in list(names):  # Retrieve specified assets
+                a = self._rig.release_asset_by_name(n)
+                if a:
+                    self._inventory.append(a)
+                    asset_name_str = a.asset_name
+                    moved.append(asset_name_str)
+
+        print(f"{self._name}: Retrieved {len(moved)} assets from rig.")
+        return moved
 
