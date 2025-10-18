@@ -146,7 +146,7 @@ class Rig:
             return f"Broken (Level {lvl}"
         if self._damage == 0:
             return f"Pristine (Level {lvl}"
-        return f"Damaged {self._damage}/{self._damage_threshold()} with an Upgrade Level of: {lvl}"
+        return f"Damaged {self._damage}/{self.damage_threshold()} with an Upgrade Level of: {lvl}"
 
     # Explicit getters as it is protected attributes
     def get_name(self):
