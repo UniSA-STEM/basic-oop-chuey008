@@ -70,6 +70,31 @@ class Hacker:
             return "Empty Inventory"
         return "; ".join(str(a) for a in self._inventory)
 
+    # ---------------------- Trace Management Section----------------------
+    def increase_trace(self, amount=None):
+        """
+        Increases the hacker's trace level by given amount.
+        Defaults to one if none is specified.
+        """
+        if amount is None:
+            amount = 1
+        self._trace += amount
+
+    def reduce_trace(self, amount=None):
+        """
+        Reduces the hacker's trace level by given amount.
+        Stops at zero.
+        """
+        self._trace = max(0, self._trace - amount)
+
+    def is_exposed(self):
+        """
+        Checks to see if the hacker's trace level exceeds the threshold.
+        Returns True if exposed and False otherwise.
+        """
+        return self._trace > self._trace_threshold
+
+
     def acquire_rig(self, rig=None):
         """
         Acquiring a rig using the already given CryptoToken
