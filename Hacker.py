@@ -181,24 +181,105 @@ class Hacker:
             return launched > 0
 
         # ---------------------- Extraction Section----------------------
-        def extract_from_rig(self, target: Rig):
-            """
-            Extract all unencrypted assets from a broken rig using a RemovableDrive in inventory.
-            Consumes the RemovableDrive and transfers unencrypted assets to hacker's inventory.
-            """
-            if not target.broken:  # checks to see if the targeted rig is broken
-                print(f"{self._name}: Target rig is not broken; cannot extract.")
-                return False
-            rd_idx = self._find_index_by_class(RemovableDrive)  # checks to see if there is a RemovabelDrive
-            if rd_idx is None:
-                print(f"{self._name}: No RemovableDrive available to extract.")
-                return False
-            # consume one drive
-            self._inventory.pop(rd_idx)
-            extracted = target.release_all_unencrypted()
-            for a in extracted:
-                self._inventory.append(a)
-            self.increase_trace(3)
-            print(f"{self._name}: Extracted {len(extracted)} assets from {target.name}.")
+    def extract_from_rig(self, target: Rig):
+        """
+        Extract all unencrypted assets from a broken rig using a RemovableDrive in inventory.
+        Consumes the RemovableDrive and transfers unencrypted assets to hacker's inventory.
+        """
+        if not target.broken:  # checks to see if the targeted rig is broken
+            print(f"{self._name}: Target rig is not broken; cannot extract.")
+            return False
+        rd_idx = self._find_index_by_class(RemovableDrive)  # checks to see if there is a RemovabelDrive
+        if rd_idx is None:
+            print(f"{self._name}: No RemovableDrive available to extract.")
+            return False
+        # consume one drive
+        self._inventory.pop(rd_idx)
+        extracted = target.release_all_unencrypted()
+        for a in extracted:
+            self._inventory.append(a)
+        self.increase_trace(3)
+        print(f"{self._name}: Extracted {len(extracted)} assets from {target.name}.")
+        return True
+
+        # ---------------------- Encrypt/ Decrypt Section----------------------
+    def has_security_chip(self, include_rig):
+        """
+        Return True if SecurityChip is in inventory or in rig storage.
+        """
+        if self._find_index_by_class(SecurityChip) is not None:
             return True
+        if include_rig and self._rig is not None:
+            return self._rig_has_asset("SecurityChip")
+        return False
+
+    def encrypt_asset(self, name, location):
+        """
+        Encrypt asset in inventory or rig storage; requires one SecurityChip.
+        """
+        if location == "inventory":  # checks inventory for SecurityChip
+            if not self._has_security_chip(False):  # checks inventory for SecurityChip and checks encryption
+                print(f"{self._name}: No SecurityChip available to encrypt.")
+                return False
+            idx = self._find_index_by_name(name)
+            if idx is None:
+                print(f"{self._name}: Asset {name} not found in inventory.")
+                return False
+            asset = self._inventory[idx]
+            asset.encrypt()
+            print(f"{self._name}: Encrypted {name} in inventory.")
+            return True
+
+        elif location == "rig":  # checks rig for SecurityChip and checks encryption
+            if self._rig is None:
+                print(f"{self._name}: No rig to encrypt assets in.")
+                return False
+            if not self._has_security_chip(True):
+                print(f"{self._name}: No SecurityChip available to encrypt in rig.")
+                return False
+            success = self._rig.encrypt_asset_in_storage(name)
+            if not success:
+                print(f"{self._name}: Asset {name} not found in rig storage.")
+                return False
+            print(f"{self._name}: Encrypted {name} in rig storage.")
+            return True
+
+        else:
+            print("Invalid location; use 'inventory' or 'rig'.")
+            return False
+
+    def decrypt_asset(self, name, location):
+        """
+        Decrypt asset in inventory or rig storage; requires one SecurityChip.
+        """
+        if location == "inventory":  # checks inventory for SecurityChip and checks decryption
+            if not self._has_security_chip(False):
+                print(f"{self._name}: No SecurityChip available to decrypt.")
+                return False
+            idx = self._find_index_by_name(name)
+            if idx is None:
+                print(f"{self._name}: Asset {name} not found in inventory.")
+                return False
+            asset = self._inventory[idx]
+            asset.decrypt()
+            print(f"{self._name}: Decrypted {name} in inventory.")
+            return True
+
+        elif location == "rig":  # checks rig for SecurityChip and checks decryption
+            if self._rig is None:
+                print(f"{self._name}: No rig to decrypt assets in.")
+                return False
+            if not self._has_security_chip(True):
+                print(f"{self._name}: No SecurityChip available to decrypt in rig.")
+                return False
+            success = self._rig.decrypt_asset_in_storage(name)
+            if not success:
+                print(f"{self._name}: Asset {name} not found in rig storage.")
+                return False
+            print(f"{self._name}: Decrypted {name} in rig storage.")
+            return True
+
+        else:
+            print("Invalid location; use 'inventory' or 'rig'.")
+            return False
 
