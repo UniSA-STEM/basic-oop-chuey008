@@ -73,7 +73,7 @@ class CryptoToken:
         return self._meta
 
     def __str__(self):
-        format_str = f"<{self.getName()}>:{self.getDescription()}"
+        format_str = f"<{self.getName()}>:<{self.getDescription()}>"
         return f"{format_str} [Encrypted]" if self._encrypted else format_str
 
 class DataSpike:
@@ -105,7 +105,7 @@ class DataSpike:
         return self._meta
 
     def __str__(self):
-        format_str = f"<{self.getName()}>:{self.getDescription()}"
+        format_str = f"<{self.getName()}>:<{self.getDescription()}>"
         return f"{format_str} [Encrypted]" if self._encrypted else format_str
 
 class RemovableDrive:
@@ -137,7 +137,7 @@ class RemovableDrive:
         return self._meta
 
     def __str__(self):
-        format_str = f"<{self.getName()}>:{self.getDescription()}"
+        format_str = f"<{self.getName()}>:<{self.getDescription()}>"
         return f"{format_str} [Encrypted]" if self._encrypted else format_str
 
 class SecurityChip:
@@ -169,7 +169,7 @@ class SecurityChip:
         return self._meta
 
     def __str__(self):
-        format_str = f"<{self.getName()}>:{self.getDescription()}"
+        format_str = f"<{self.getName()}>:<{self.getDescription()}>"
         return f"{format_str} [Encrypted]" if self._encrypted else format_str
 
 class HardwarePatch:
@@ -201,5 +201,5 @@ class HardwarePatch:
         return self._meta
 
     def __str__(self):
-        format_str = f"<{self.getName()}>:{self.getDescription()}"
+        format_str = f"<{self.getName()}>:<{self.getDescription()}>"
         return f"{format_str} [Encrypted]" if self._encrypted else format_str
