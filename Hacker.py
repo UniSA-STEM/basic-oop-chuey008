@@ -16,7 +16,7 @@ class Hacker:
     Represents a Hacker with an inventory, a rig and trace level with a level and threshold.
     Inventory will hold the Assets and contains one CryptoToken.
     """
-    def __init__(self, name: str):
+    def __init__(self, name):
         self._name = name
         self._inventory = [CryptoToken()]
         self._rig = None
@@ -38,29 +38,25 @@ class Hacker:
         """
         Return index of first item with matching _name or class name.
         """
-        for i, a in enumerate(self._inventory):
-            try:
-                if a._name == name or type(a).__name__ == name:
-                    return i
-            except AttributeError:  # if a doesn't have _name, catches the AttributeError and checks the class name
-                if type(a).__name__ == name:
-                    return i
+        for i, asset in enumerate(self._inventory):
+            if asset.name == name or type(asset).__name__ == name:
+                return i
         return None
 
-    def add_to_inventory(self, Asset: object):
+    def add_to_inventory(self, asset):
         """
         Add an asset to the inventory.
         """
-        self._inventory.append(Asset)
+        self._inventory.append(asset)
 
-    def scan_inventory_for(self, name: str):
+    def scan_inventory_for(self, name):
         """
         Scans the inventory for a certain item by _name or class name.
         """
-        item = self._find_item_by_name(name)
-        if item is None:
+        idx = self._find_index_by_name(name)
+        if idx is None:
             return None
-        return self._inventory.pop(item)
+        return self._inventory.pop(idx)
 
     def inventory_summary(self):
         """
@@ -71,28 +67,26 @@ class Hacker:
         return "; ".join(str(a) for a in self._inventory)
 
     # ---------------------- Trace Management Section----------------------
-    def increase_trace(self, amount=None):
+    def increase_trace(self, amount=1):
         """
         Increases the hacker's trace level by given amount.
         Defaults to one if none is specified.
         """
-        if amount is None:
-            amount = 1
-        self._trace += amount
+        self._trace_level += amount
 
-    def reduce_trace(self, amount=None):
+    def reduce_trace(self, amount=1):
         """
         Reduces the hacker's trace level by given amount.
         Stops at zero.
         """
-        self._trace = max(0, self._trace - amount)
+        self._trace_level = max(0, self._trace_level - amount)
 
     def is_exposed(self):
         """
         Checks to see if the hacker's trace level exceeds the threshold.
         Returns True if exposed and False otherwise.
         """
-        return self._trace > self._trace_threshold
+        return self._trace_level > self._trace_threshold
 
     # ---------------------- Rig Management Section----------------------
     def acquire_rig(self, rig=None):
@@ -148,7 +142,7 @@ class Hacker:
             return success
 
     # ---------------------- Battle Section----------------------
-    def launch_data_spike(self, spikes):
+    def launch_data_spike(self, target, spikes):
         """
         Launching Data Spikes on other rigs and consuming a Data Spike from their own rig storage
         Checks to see if there is a rig to launch Data Spikes from
@@ -170,26 +164,25 @@ class Hacker:
             if spike is None:
                 print(f"{self._name}: No DataSpike is available in this rig.")
                 continue
-            self._target.take_hit()
+            target.take_hit()
             self.increase_trace(2)
             launched += 1
-            print(f"{self._name}: Launched DataSpike at {self._target.name}; target damage now {self._target.damage}.")
-            if self._target.broken:
-                print(f"{self._target.name} is broken.")
+            print(f"{self._name}: Launched DataSpike at {target.get_name()}; target damage now {target.get_damage()}.")
+            if target.is_broken:
+                print(f"{target.get_name()} is broken.")
                 break
-
             return launched > 0
 
     # ---------------------- Extraction Section----------------------
-    def extract_from_rig(self, target: Rig):
+    def extract_from_rig(self, target):
         """
         Extract all unencrypted assets from a broken rig using a RemovableDrive in inventory.
         Consumes the RemovableDrive and transfers unencrypted assets to hacker's inventory.
         """
-        if not target.broken:  # checks to see if the targeted rig is broken
+        if not target.is_broken:  # checks to see if the targeted rig is broken
             print(f"{self._name}: Target rig is not broken; cannot extract.")
             return False
-        rd_idx = self._find_index_by_class(RemovableDrive)  # checks to see if there is a RemovabelDrive
+        rd_idx = self._find_index_by_class(RemovableDrive)  # checks to see if there is a RemovableDrive
         if rd_idx is None:
             print(f"{self._name}: No RemovableDrive available to extract.")
             return False
@@ -199,7 +192,7 @@ class Hacker:
         for a in extracted:
             self._inventory.append(a)
         self.increase_trace(3)
-        print(f"{self._name}: Extracted {len(extracted)} assets from {target.name}.")
+        print(f"{self._name}: Extracted {len(extracted)} assets.")
         return True
 
     # ---------------------- Encrypt/ Decrypt Section----------------------
@@ -225,11 +218,9 @@ class Hacker:
             if idx is None:
                 print(f"{self._name}: Asset {name} not found in inventory.")
                 return False
-            asset = self._inventory[idx]
-            asset.encrypt()
+            self._inventory[idx].encrypt()
             print(f"{self._name}: Encrypted {name} in inventory.")
             return True
-
         elif location == "rig":  # checks rig for SecurityChip and checks encryption
             if self._rig is None:
                 print(f"{self._name}: No rig to encrypt assets in.")
@@ -243,7 +234,6 @@ class Hacker:
                 return False
             print(f"{self._name}: Encrypted {name} in rig storage.")
             return True
-
         else:
             print("Invalid location; use 'inventory' or 'rig'.")
             return False
@@ -260,11 +250,9 @@ class Hacker:
             if idx is None:
                 print(f"{self._name}: Asset {name} not found in inventory.")
                 return False
-            asset = self._inventory[idx]
-            asset.decrypt()
+            self._inventory[idx].decrypt()
             print(f"{self._name}: Decrypted {name} in inventory.")
             return True
-
         elif location == "rig":  # checks rig for SecurityChip and checks decryption
             if self._rig is None:
                 print(f"{self._name}: No rig to decrypt assets in.")
@@ -278,7 +266,6 @@ class Hacker:
                 return False
             print(f"{self._name}: Decrypted {name} in rig storage.")
             return True
-
         else:
             print("Invalid location; use 'inventory' or 'rig'.")
             return False
@@ -342,13 +329,13 @@ class Hacker:
         return moved
 
     # ---------------------- Explicit Getters Section----------------------
-    def get_name(self):
+    def getName(self):
         return self._name
 
-    def get_rig(self):
+    def getRig(self):
         return self._rig
 
-    def get_trace_level(self):
+    def getTraceLevel(self):
         return self._trace_level
 
     def __str__(self):
