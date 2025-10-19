@@ -53,10 +53,10 @@ def test_trace_blocking():
     hacker.add_to_inventory(CryptoToken())
     hacker.acquire_rig()
 
-    # artificially raise trace
+    # artificially raise trace and exceed threshold
     hacker.increase_trace(10)
     hacker.store_to_rig([DataSpike().getName()])
-    hacker.launch_data_spike(Rig("Nova"), spikes=1)
+    hacker.launch_data_spike(Rig("DummyRig"), spikes=1)
 
 def test_encryption_flow():
     hacker = Hacker("Fidelius")
@@ -72,6 +72,19 @@ def test_encryption_flow():
     # decrypt asset in inventory
     hacker.decrypt_asset("DataSpike", "inventory")
 
+def test_extraction_edge_case():
+    hacker = Hacker("Fidelius")
+    target_rig = Rig("BrokenRig")
+
+    # simulate broken rig with unencrypted assets
+    target_rig.take_hit()
+    target_rig.take_hit()
+    target_rig.store_asset(DataSpike())
+    target_rig.store_asset(RemovableDrive())
+
+    hacker.add_to_inventory(RemovableDrive())
+    hacker.extract_from_rig(target_rig)
+
 def run_all_tests():
     print("\n--- Test: Acquire and Upgrade ---")
     test_acquire_and_upgrade()
@@ -84,6 +97,9 @@ def run_all_tests():
 
     print("\n--- Test: Encryption Flow ---")
     test_encryption_flow()
+
+    print("\n--- Test: Extraction Edge Case ---")
+    test_extraction_edge_case()
 
 if __name__ == "__main__":
     run_all_tests()
